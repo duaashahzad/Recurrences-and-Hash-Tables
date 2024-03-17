@@ -16,37 +16,41 @@ public class RadixSort {
 
     }
 
-    public static void radix(String[] arr) {
-        // Find the maximum length of strings in the array
-        int maxLength = 0;
-        for (String str : arr) {
-            maxLength = Math.max(maxLength, str.length());
+
+        public static void radix(String[] arr) {
+            // Find the maximum length of strings in the array
+            int maxLength = 0;
+            for (String str : arr) {
+                maxLength = Math.max(maxLength, str.length());
+            }
+
+            // Perform counting sort for each character from right to left
+            for (int i = maxLength - 1; i >= 0; i--) {
+                countingSort(arr, i);
+            }
         }
 
-        // Perform counting sort for each character from right to left
-        for (int i = maxLength - 1; i >= 0; i--) {
-            countingSort(arr, i);
-        }
-    }
+        // Counting sort for a specific character position
+        private static void countingSort(String[] arr, int pos) {
+            HashMap<Character, ArrayList<String>> map = new HashMap<>();
 
-    // Counting sort for a specific character position
-    private static void countingSort(String[] arr, int pos) {
-        HashMap<Character, ArrayList<String>> map = new HashMap<>();
+            // Group strings based on the character at the specified position
+            for (String str : arr) {
+                char ch = pos < str.length() ? str.charAt(pos) : 'a'; // Assuming missing characters are treated as 'a'
+                if (!map.containsKey(ch)) {
+                    map.put(ch, new ArrayList<>());
+                }
+                map.get(ch).add(str);
+            }
 
-        // Group strings based on the character at the specified position
-        for (String str : arr) {
-            char ch = pos < str.length() ? str.charAt(pos) : 'a'; // Assuming missing characters are treated as 'a'
-            map.computeIfAbsent(ch, k -> new ArrayList<>()).add(str);
-        }
-
-        // Reconstruct the array based on the groups
-        int index = 0;
-        for (char ch = 'a'; ch <= 'z'; ch++) {
-            if (map.containsKey(ch)) {
-                for (String str : map.get(ch)) {
-                    arr[index++] = str;
+            // Reconstruct the array based on the groups
+            int index = 0;
+            for (char ch = 'a'; ch <= 'z'; ch++) {
+                if (map.containsKey(ch)) {
+                    for (String str : map.get(ch)) {
+                        arr[index++] = str;
+                    }
                 }
             }
         }
-    }
 }
